@@ -53,62 +53,72 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               Container(
                 padding: EdgeInsets.all(16),
-                child: MultiSelectFormField(
-                  autovalidate: false,
-                  titleText: 'My workouts',
-                  validator: (value) {
-                    if (value == null || value.length == 0) {
-                      return 'Please select one or more options';
-                    }
-                    return null;
-                  },
-                  dataSource: [
-                    {
-                      "display": "Running",
-                      "value": "Running",
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: MultiSelectFormField(
+                    autovalidate: false,
+
+                    validator: (value) {
+                      if (value == null || value.length == 0) {
+                        return 'Please select one or more options';
+                      }
+                      return null;
                     },
-                    {
-                      "display": "Climbing",
-                      "value": "Climbing",
+                    dataSource: [
+                      {
+                        "display": "شيبسي",
+                        "value": "6شبسي",
+                      },
+                      {
+                        "display": "شيبسي",
+                        "value": "5شبسي",
+                      },
+                      {
+                        "display": "شيبسي",
+                        "value": "شبس8ي",
+                      },
+                      {
+                        "display": "شيبسي",
+                        "value": "شبfسي",
+                      },
+                      {
+                        "display": "شيبسي",
+                        "value": "شبسfي",
+                      },
+                      {
+                        "display": "شيبسي",
+                        "value": "dشبسي",
+                      },
+                      {
+                        "display": "شبسي",
+                        "value": "1شبسي",
+                      },
+                      {
+                        "display": "شيبسي",
+                        "value": "شبسي",
+                      },
+                    ],
+                    titleText: 'اختار',
+                    textField: 'display',
+
+                    valueField: 'value',
+                    okButtonLabel: 'موافق',
+                    cancelButtonLabel: 'الغاء',
+                    // required: true,
+                    hintText: 'Please choose one or more',
+                    initialValue: _myActivities,
+                    onSaved: (value) {
+                      if (value == null) return;
+                      print(value);
+                      setState(() {
+                        _myActivities = value;
+                      });
                     },
-                    {
-                      "display": "Walking",
-                      "value": "Walking",
-                    },
-                    {
-                      "display": "Swimming",
-                      "value": "Swimming",
-                    },
-                    {
-                      "display": "Soccer Practice",
-                      "value": "Soccer Practice",
-                    },
-                    {
-                      "display": "Baseball Practice",
-                      "value": "Baseball Practice",
-                    },
-                    {
-                      "display": "Football Practice",
-                      "value": "Football Practice",
-                    },
-                  ],
-                  textField: 'display',
-                  valueField: 'value',
-                  okButtonLabel: 'OK',
-                  cancelButtonLabel: 'CANCEL',
-                  // required: true,
-                  hintText: 'Please choose one or more',
-                  initialValue: _myActivities,
-                  onSaved: (value) {
-                    if (value == null) return;
-                    setState(() {
-                      _myActivities = value;
-                    });
-                  },
+                  ),
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(8),                
+                padding: EdgeInsets.all(8),
                 child: RaisedButton(
                   child: Text('Save'),
                   onPressed: _saveForm,

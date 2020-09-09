@@ -20,6 +20,8 @@ class MultiSelectFormField extends FormField<dynamic> {
   final String cancelButtonLabel;
   final Color fillColor;
   final InputBorder border;
+  final Widget iconWidget;
+  final TextStyle txtStyle;
 
   MultiSelectFormField(
       {FormFieldSetter<dynamic> onSaved,
@@ -41,7 +43,9 @@ class MultiSelectFormField extends FormField<dynamic> {
       this.cancelButtonLabel = 'CANCEL',
       this.fillColor,
       this.border,
-      this.trailing})
+      this.trailing,
+      this.txtStyle,
+      this.iconWidget})
       : super(
           onSaved: onSaved,
           validator: validator,
@@ -53,9 +57,12 @@ class MultiSelectFormField extends FormField<dynamic> {
 
               if (state.value != null) {
                 state.value.forEach((item) {
-                  var existingItem = dataSource.singleWhere((itm) => itm[valueField] == item, orElse: () => null);
+                  var existingItem = dataSource.singleWhere(
+                      (itm) => itm[valueField] == item,
+                      orElse: () => null);
                   selectedOptions.add(Chip(
-                    label: Text(existingItem[textField], overflow: TextOverflow.ellipsis),
+                    label: Text(existingItem[textField],
+                        overflow: TextOverflow.ellipsis),
                   ));
                 });
               }
@@ -72,7 +79,8 @@ class MultiSelectFormField extends FormField<dynamic> {
 
                 final items = List<MultiSelectDialogItem<dynamic>>();
                 dataSource.forEach((item) {
-                  items.add(MultiSelectDialogItem(item[valueField], item[textField]));
+                  items.add(
+                      MultiSelectDialogItem(item[valueField], item[textField]));
                 });
 
                 List selectedValues = await showDialog<List>(
@@ -95,60 +103,59 @@ class MultiSelectFormField extends FormField<dynamic> {
               },
               child: InputDecorator(
                 decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(0.0),
                   filled: true,
                   errorText: state.hasError ? state.errorText : null,
                   errorMaxLines: 4,
-                  fillColor: fillColor ?? Theme.of(state.context).canvasColor,
-                  border: border ?? UnderlineInputBorder(),
+                  fillColor: fillColor ?? Colors.white,
+                  enabledBorder: border ??
+                      OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(16.0)),
+                  border: border ??
+                      OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(16.0)),
                 ),
                 isEmpty: state.value == null || state.value == '',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                              child: Text(
-                            titleText,
-                            style: TextStyle(fontSize: 13.0, color: Colors.black54),
-                          )),
-                          required
-                              ? Padding(padding:EdgeInsets.only(top:5, right: 5), child: Text(
-                                  ' *',
-                                  style: TextStyle(
-                                    color: Colors.red.shade700,
-                                    fontSize: 17.0,
-                                  ),
-                                ),
-                              )
-                              : Container(),
-                          Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black87,
-                            size: 25.0,
-                          ),
-                        ],
-                      ),
-                    ),
-                    state.value != null && state.value.length > 0
-                        ? Wrap(
-                            spacing: 8.0,
-                            runSpacing: 0.0,
-                            children: _buildSelectedOptions(state),
-                          )
-                        : new Container(
-                            padding: EdgeInsets.only(top: 4),
+                    required
+                        ? Padding(
+                            padding: EdgeInsets.only(top: 5, right: 5),
                             child: Text(
-                              hintText,
+                              ' *',
                               style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey.shade500,
+                                color: Color(0xff006DA8),
+                                fontSize: 17.0,
                               ),
                             ),
                           )
+                        : Container(),
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text(
+                        titleText,
+                        style: txtStyle ??
+                            TextStyle(fontSize: 24.0, color: Colors.black54),
+                      ),
+                    )),
+                    iconWidget ??
+                        Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.symmetric(vertical: 2.0),
+                          child: Image.asset('assets/icons8-down-96.png'),
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.0),
+                              border: Border.all(
+                                color: Colors.blue,
+                              )),
+                        ),
                   ],
                 ),
               ),

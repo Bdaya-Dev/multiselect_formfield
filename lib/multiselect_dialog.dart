@@ -9,7 +9,12 @@ class MultiSelectDialogItem<V> {
 
 class MultiSelectDialog<V> extends StatefulWidget {
   MultiSelectDialog(
-      {Key key, this.items, this.initialSelectedValues, this.title, this.okButtonLabel, this.cancelButtonLabel})
+      {Key key,
+      this.items,
+      this.initialSelectedValues,
+      this.title,
+      this.okButtonLabel,
+      this.cancelButtonLabel})
       : super(key: key);
 
   final List<MultiSelectDialogItem<V>> items;
@@ -53,36 +58,73 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.title),
-      contentPadding: EdgeInsets.only(top: 12.0),
+      insetPadding: EdgeInsets.symmetric(vertical: 50.0),
+      actionsPadding: EdgeInsets.all(0),
+      buttonPadding: EdgeInsets.all(0),
+      contentPadding: EdgeInsets.all(4),
       content: SingleChildScrollView(
         child: ListTileTheme(
-          contentPadding: EdgeInsets.fromLTRB(14.0, 0.0, 24.0, 0.0),
+          //contentPadding: EdgeInsets.fromLTRB(4.0, 0.0, 24.0, 0.0),
           child: ListBody(
             children: widget.items.map(_buildItem).toList(),
           ),
         ),
       ),
       actions: <Widget>[
-        FlatButton(
-          child: Text(widget.cancelButtonLabel),
-          onPressed: _onCancelTap,
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: 50,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: FlatButton(
+                  child: Text(
+                    widget.cancelButtonLabel,
+                    style:
+                        TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: _onCancelTap,
+                ),
+              ),
+              Expanded(
+                child: FlatButton(
+                  color: Color(0xff006DA8),
+                  child: Text(
+                    widget.okButtonLabel,
+                    style:
+                        TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: _onSubmitTap,
+                ),
+              )
+            ],
+          ),
         ),
-        FlatButton(
-          child: Text(widget.okButtonLabel),
-          onPressed: _onSubmitTap,
-        )
       ],
     );
   }
 
   Widget _buildItem(MultiSelectDialogItem<V> item) {
     final checked = _selectedValues.contains(item.value);
-    return CheckboxListTile(
-      value: checked,
-      title: Text(item.label),
-      controlAffinity: ListTileControlAffinity.leading,
-      onChanged: (checked) => _onItemCheckedChange(item.value, checked),
+    return Column(
+      children: [
+        CheckboxListTile(
+          checkColor: Colors.white,
+          activeColor: Colors.green,
+          value: checked,
+          title: Text(
+            item.label,
+            textDirection: TextDirection.rtl,
+            style: TextStyle(color: Color(0xff006DA8), fontSize: 28),
+          ),
+          controlAffinity: ListTileControlAffinity.leading,
+          onChanged: (checked) => _onItemCheckedChange(item.value, checked),
+        ),
+        Divider(
+          color: Color(0xff006DA8),
+        )
+      ],
     );
   }
 }
